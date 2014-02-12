@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # Opensubtitles command line downloader
 # Copyright (C) 2014  Tomas Meszaros <exo at tty dot sk>
 #
@@ -18,7 +19,6 @@ from bs4 import BeautifulSoup
 from urllib import urlretrieve
 from urllib2 import urlopen
 from os import getcwd
-from sys import exit
 
 OPEN_SUBTITLES_URL = 'http://www.opensubtitles.org'
 
@@ -27,7 +27,7 @@ def main():
 
     if movie == '':
         print "Not found, see ya!"
-        exit(0)
+        exit(1)
 
     url = construct_url(movie)
     titles_source = get_html_source(url)
@@ -37,23 +37,35 @@ def main():
     for i in range(len(titles)):
         print "[%d] %s" % (i, titles[i][0])
 
-    movie_index = input("Pick movie number in brackets: ")
+    movie_index = raw_input("Pick movie number in brackets: ")
+    int_check(movie_index)
 
-    subtitles_source = get_html_source(titles[movie_index][1])
+    subtitles_source = get_html_source(titles[int(movie_index)][1])
     subtitles_handler = BeautifulSoup(subtitles_source)
     subtitles = get_sub_name_href_zip(subtitles_handler)
 
     for i in range(len(subtitles)):
         print "[%d] %s" % (i, subtitles[i][0])
 
-    subtitles_index = input("Pick subtitles number in brackets you want to download: ")
-    subtitles_url = subtitles[subtitles_index][1]
+    subtitles_index = raw_input("Pick subtitles number in brackets you want to download: ")
+    int_check(subtitles_index)
+
+    subtitles_url = subtitles[int(subtitles_index)][1]
     download_path = raw_input("Give me path where to save it: ")
+
     if download_path == '':
         download_path = "%s/%s.zip" % (getcwd(), subtitles[subtitles_index][0])
     urlretrieve(subtitles_url, download_path)
+
     print "Saved in %s. See ya!" % download_path
     exit(0)
+
+def int_check(var):
+    try:
+        int(var)
+    except ValueError:
+        print "Woooops, I need some number! See ya!"
+        exit(1)
 
 def get_html_source(url):
     return urlopen(url).read()
