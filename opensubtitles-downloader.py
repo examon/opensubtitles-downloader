@@ -51,12 +51,9 @@ def main():
     download_path = raw_input("Give me path where to save it: ")
     if download_path == '':
         download_path = "%s/%s.zip" % (getcwd(), subtitles[subtitles_index][0])
-    download(subtitles_url, download_path)
+    urlretrieve(subtitles_url, download_path)
     print "Saved in %s. See ya!" % download_path
     exit(0)
-
-def download(url, path):
-    urlretrieve(url, path)
 
 def get_html_source(url):
     return urlopen(url).read()
