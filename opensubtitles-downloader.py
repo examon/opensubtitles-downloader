@@ -45,16 +45,18 @@ def main():
     subtitles = get_sub_name_href_zip(subtitles_handler)
 
     for i in range(len(subtitles)):
-        print "[%d] %s" % (i, subtitles[i][0])
+        entry = ' '.join(subtitles[i][0].split())
+        print "[%d] %s" % (i, entry)
 
     subtitles_index = raw_input("Pick subtitles number in brackets you want to download: ")
     int_check(subtitles_index)
 
     subtitles_url = subtitles[int(subtitles_index)][1]
-    download_path = raw_input("Give me path where to save it: ")
+    download_path = \
+        raw_input("Give me path where to save it [ENTER=%s]: " % getcwd())
 
-    if download_path == '':
-        download_path = "%s/%s.zip" % (getcwd(), subtitles[subtitles_index][0])
+    if download_path == '' or download_path == '\n':
+        download_path = "%s/%s.zip" % (getcwd(), subtitles[int(subtitles_index)][0])
     urlretrieve(subtitles_url, download_path)
 
     print "Saved in %s. See ya!" % download_path
@@ -71,7 +73,8 @@ def get_html_source(url):
     return urlopen(url).read()
 
 def construct_url(movie):
-    return "http://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-%s" % movie.replace(' ', '+')
+    return "%s/en/search2/sublanguageid-eng/moviename-%s" \
+        % (OPEN_SUBTITLES_URL, movie.replace(' ', '+'))
 
 def get_title_href_zip(source_handler):
     # filter entries from handler starting with name* and save them to list
