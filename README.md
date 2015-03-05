@@ -2,7 +2,7 @@ Opensubtitles command line downloader
 =====================================
 
 I created this toy project when I was bored. I do not guarantee that it will
-as it should :-).
+work as it should :-).
 
 It can download subtitles from the command line! YAY!
 
